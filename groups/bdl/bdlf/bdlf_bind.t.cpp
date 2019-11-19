@@ -26,6 +26,7 @@
 #include <bsl_cstdlib.h>        // 'atoi'
 #include <bsl_cstring.h>        // 'strcpy'
 #include <bsl_functional.h>     // 'ref', 'cref'
+#include <bsl_map.h>
 #include <bsl_string.h>
 
 
@@ -269,6 +270,15 @@ class ConvertibleFromToInt {
 // ============================================================================
 //                    GLOBAL HELPER FUNCTIONS FOR TESTING
 // ----------------------------------------------------------------------------
+
+struct Base1 {};
+struct Base2 {};
+
+struct Derived : Base1, Base2 {
+    void fn(const bsl::map<int, int>& arg)
+    {
+    }
+};
 
 // ----------------------------------------------------------------------------
 //                   TESTING FUNCTIONS/CLASSES FOR CASE 5
@@ -3487,6 +3497,14 @@ int main(int argc, char *argv[])
       case NUMBER: {                                                          \
         testCase##NUMBER(verbose, veryVerbose, veryVeryVerbose);              \
       } break
+      case 8: {
+        Derived            obj;
+        bsl::map<int, int> arg { { 1, 1 } };
+
+        bsl::function<void ()> bound = bdlf::BindUtil::bind(&Derived::fn,
+                                                            &obj,
+                                                            arg);
+      } break;
         CASE(7);
         CASE(6);
         CASE(5);
